@@ -214,6 +214,117 @@ function showFullImage(img) {
     modalImg.src = img.src;
 }
 
+
+
+// Concentration Trend (Line Chart)
+const concentrationTrend = new Chart(document.getElementById('concentration-trend'), {
+    type: 'line',
+    data: {
+        labels: ['00:00', '00:15', '00:30', '00:45', '01:00', '01:15'],
+        datasets: [{
+            label: 'Concentration (P/L)',
+            data: [10, 12, 15, 14, 15, 16],
+            borderColor: '#4CAF50',
+            backgroundColor: 'rgba(76, 175, 80, 0.2)',
+            fill: true,
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: { display: true, text: 'Concentration (P/L)' }
+            },
+            x: {
+                title: { display: true, text: 'Time' }
+            }
+        }
+    }
+});
+
+// Size Distribution (Bar Chart)
+const sizeDistribution = new Chart(document.getElementById('size-distribution'), {
+    type: 'bar',
+    data: {
+        labels: ['<50µm', '50-100µm', '100-200µm', '200-500µm'],
+        datasets: [{
+            label: 'Particle Count',
+            data: [5, 8, 4, 2],
+            backgroundColor: ['#2196F3', '#3F51B5', '#03A9F4', '#00BCD4'],
+            borderColor: ['#1976D2', '#303F9F', '#0288D1', '#0097A7'],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: { display: true, text: 'Count' }
+            },
+            x: {
+                title: { display: true, text: 'Particle Size' }
+            }
+        }
+    }
+});
+
+// Polymer Type Breakdown (Pie Chart)
+const polymerBreakdown = new Chart(document.getElementById('polymer-breakdown'), {
+    type: 'pie',
+    data: {
+        labels: ['PE', 'PP', 'PS', 'PVC'],
+        datasets: [{
+            label: 'Polymer Types',
+            data: [40, 30, 20, 10],
+            backgroundColor: ['#FF9800', '#FFC107', '#FF5722', '#F44336'],
+            borderColor: ['#F57C00', '#FFA000', '#E64A19', '#D32F2F'],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true
+    }
+});
+
+// Raw Sensor Pulses (Line Chart)
+const sensorPulses = new Chart(document.getElementById('sensor-pulses'), {
+    type: 'line',
+    data: {
+        labels: ['00:00', '00:05', '00:10', '00:15', '00:20', '00:25'],
+        datasets: [{
+            label: 'Sensor Pulse (mV)',
+            data: [0.5, 0.7, 0.6, 0.8, 0.9, 0.7],
+            borderColor: '#9C27B0',
+            backgroundColor: 'rgba(156, 39, 176, 0.2)',
+            fill: true,
+            tension: 0.3
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: { display: true, text: 'Pulse (mV)' }
+            },
+            x: {
+                title: { display: true, text: 'Time' }
+            }
+        }
+    }
+});
+
+// Modal functions (already referenced in HTML)
+function showFullImage(img) {
+    const modal = document.getElementById('image-modal');
+    const modalImg = document.getElementById('modal-image');
+    modal.style.display = 'block';
+    modalImg.src = img.src;
+}
+
 function closeModal() {
     document.getElementById('image-modal').style.display = 'none';
 }
