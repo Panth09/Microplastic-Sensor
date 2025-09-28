@@ -9,32 +9,28 @@ const metricsData = {
 };
 
 const trendData = {
-    labels: ['13:00', '13:15', '13:30', '13:45', '14:00', '14:15', '01:23'],
-    data: [8, 12, 10, 18, 15, 22, 15]
+    labels: ['13:00', '13:15', '13:30', '13:45', '14:00'],
+    data: [12.0, 13.5, 14.0, 15.0, 16.0]
 };
 
 const sizeData = {
     labels: ['10-50μm', '50-100μm', '100-200μm', '>200μm'],
-    data: [45, 30, 20, 5]
+    data: [40, 30, 20, 10]
 };
 
 const polymerData = {
-    labels: ['PE', 'PET', 'PP', 'PS', 'Other'],
-    data: [35, 25, 20, 15, 5]
+    labels: ['PE', 'PS', 'Other'],
+    data: [15, 15, 70]
 };
 
 const sensorPulseData = {
-    labels: trendData.labels,
-    datasets: [
-        { label: '10° Scattering', data: [0.2, 0.3, 0.25, 0.4, 0.35, 0.5, 0.3] },
-        { label: '90° Scattering', data: [0.15, 0.2, 0.18, 0.3, 0.25, 0.35, 0.22] },
-        { label: '150° Scattering', data: [0.1, 0.15, 0.12, 0.2, 0.18, 0.25, 0.15] },
-        { label: 'Fluorescence', data: [0.05, 0.08, 0.06, 0.12, 0.1, 0.15, 0.08] }
-    ]
+    labels: [0, 20, 40, 60, 80, 100],
+    data: [0.0, 0.6, 0.8, 0.7, 0.9, 0.5]
 };
 
-// Chart initialization (only for flow-graph)
+// Chart initialization
 function initCharts() {
+    // Flow Rate Mini Graph
     new Chart(document.getElementById('flow-graph'), {
         type: 'line',
         data: {
@@ -52,6 +48,95 @@ function initCharts() {
             maintainAspectRatio: false,
             plugins: { legend: { display: false } },
             scales: { x: { display: false }, y: { display: false } }
+        }
+    });
+
+    // Concentration Trend
+    new Chart(document.getElementById('concentration-trend'), {
+        type: 'line',
+        data: {
+            labels: trendData.labels,
+            datasets: [{
+                label: 'Microplastic Concentration (P/L)',
+                data: trendData.data,
+                borderColor: '#ff5733',
+                backgroundColor: 'rgba(255, 87, 51, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { title: { display: true, text: 'Concentration Trend' } },
+            scales: {
+                y: { beginAtZero: true, title: { display: true, text: 'Concentration (P/L)' }, min: 12, max: 16 },
+                x: { title: { display: true, text: 'Time' } }
+            }
+        }
+    });
+
+    // Size Distribution
+    new Chart(document.getElementById('size-distribution'), {
+        type: 'bar',
+        data: {
+            labels: sizeData.labels,
+            datasets: [{
+                label: 'Particle Count',
+                data: sizeData.data,
+                backgroundColor: '#3498db',
+                borderColor: '#2980b9',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { title: { display: true, text: 'Size Distribution' } },
+            scales: {
+                y: { beginAtZero: true, title: { display: true, text: 'Particle Count' }, max: 50 },
+                x: { title: { display: true, text: 'Size Range (μm)' } }
+            }
+        }
+    });
+
+    // Polymer Type Breakdown
+    new Chart(document.getElementById('polymer-breakdown'), {
+        type: 'doughnut',
+        data: {
+            labels: polymerData.labels,
+            datasets: [{
+                data: polymerData.data,
+                backgroundColor: ['#ff5733', '#2ecc71', '#3498db'],
+                borderColor: ['#c0392b', '#27ae60', '#2980b9'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { title: { display: true, text: 'Polymer Type Breakdown' } }
+        }
+    });
+
+    // Raw Sensor Pulses
+    new Chart(document.getElementById('sensor-pulses'), {
+        type: 'line',
+        data: {
+            labels: sensorPulseData.labels,
+            datasets: [{
+                label: 'Signal Amplitude',
+                data: sensorPulseData.data,
+                borderColor: '#ff0000',
+                backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                tension: 0,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { title: { display: true, text: 'Raw Sensor Pulses (Diagnostic)' } },
+            scales: {
+                y: { beginAtZero: true, title: { display: true, text: 'Signal Amplitude' }, max: 1 },
+                x: { title: { display: true, text: 'Time (ms)' } }
+            }
         }
     });
 }
@@ -85,13 +170,6 @@ function updateMetrics() {
     trendData.labels.push(new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }));
     trendData.data.shift();
     trendData.data.push(metricsData.concentration);
-
-    // Update sensor pulse data
-    sensorPulseData.labels = trendData.labels;
-    sensorPulseData.datasets.forEach(dataset => {
-        dataset.data.shift();
-        dataset.data.push((Math.random() * 0.2 + (dataset.label === 'Fluorescence' ? 0.05 : dataset.label === '150° Scattering' ? 0.1 : dataset.label === '90° Scattering' ? 0.15 : 0.2)).toFixed(2));
-    });
 
     // Re-initialize flow-graph chart
     initCharts();
